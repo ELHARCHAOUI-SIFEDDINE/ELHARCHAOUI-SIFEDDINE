@@ -1,4 +1,4 @@
-<h1 align="center">Hi 👋, I'm EL Harchaoui Sif-eddine</h1>
+<h1 align="center">Hi 👋, I'm EL HARACHAOUI SIF-EDDINE</h1>
 <h3 align="center">A passionate full stack developer from Morocco</h3>
 
 <img alt="Coder GIF" align="right" height=250 width=350 src="https://cdn.dribbble.com/users/730703/screenshots/6581243/avento.gif" />
