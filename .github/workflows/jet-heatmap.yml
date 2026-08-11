@@ -38,6 +38,9 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dist/github-jet.svg dist/github-contrib-card.svg dist/github-profile-card.svg dist/contribution-wave.svg dist/leetcode-card.svg
+          # Glob instead of an explicit file list: any card that failed to generate
+          # (e.g. a transient API hiccup) is simply absent, not a missing-pathspec error
+          # that would abort this step and block committing the cards that DID succeed.
+          git add dist/*.svg
           git diff --cached --quiet || git commit -m "chore: update contribution, profile & leetcode cards [skip ci]"
           git push

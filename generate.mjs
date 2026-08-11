@@ -83,7 +83,7 @@ const PROFILE_QUERY = `
         totalPullRequestContributions
         totalIssueContributions
       }
-      repositories(first: 50, after: $after, ownerAffiliation: OWNER, isFork: false, privacy: PUBLIC) {
+      repositories(first: 50, after: $after, ownerAffiliations: [OWNER], isFork: false, privacy: PUBLIC) {
         pageInfo { hasNextPage endCursor }
         nodes {
           stargazerCount
