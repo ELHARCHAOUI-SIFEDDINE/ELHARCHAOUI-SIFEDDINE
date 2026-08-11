@@ -4,7 +4,7 @@
  *   - dist/github-jet.svg           "jet over contribution grid"
  *   - dist/github-contrib-card.svg  contribution/streak stat panel
  *   - dist/leetcode-card.svg        LeetCode solved/acceptance panel
- * All using sifeddine-elharchaoui's REAL GitHub contribution calendar
+ * All using ELHARCHAOUI-SIFEDDINE's REAL GitHub contribution calendar
  * and HrSaif's public LeetCode stats. Run via GitHub Actions
  * (jet-heatmap.yml) — updates daily.
  */
