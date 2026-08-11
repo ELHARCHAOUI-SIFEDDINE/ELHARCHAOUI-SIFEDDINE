@@ -10,10 +10,7 @@
 
 <br/>
 
-<picture>
-  <source media="(prefers-color-scheme: light)" srcset="dist/github-jet-light.svg">
-  <img src="dist/github-jet.svg" width="100%"/>
-</picture>
+
 
 <br/>
 
