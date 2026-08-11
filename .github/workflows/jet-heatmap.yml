@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate terminal-themed SVG cards
         env:
-          GH_USERNAME: sifeddine-elharchaoui
+          GH_USERNAME: ELHARCHAOUI-SIFEDDINE
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT_PATH: dist/github-jet.svg
           CONTRIB_OUTPUT_PATH: dist/github-contrib-card.svg
