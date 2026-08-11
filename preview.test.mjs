@@ -5,6 +5,8 @@ process.env.GH_USERNAME         = "ELHARCHAOUI-SIFEDDINE";
 process.env.GH_TOKEN            = "fake-token-for-preview";
 process.env.OUTPUT_PATH         = "dist/preview.svg";
 process.env.CONTRIB_OUTPUT_PATH = "dist/preview-contrib-card.svg";
+process.env.PROFILE_OUTPUT_PATH = "dist/preview-profile-card.svg";
+process.env.WAVE_OUTPUT_PATH    = "dist/preview-contribution-wave.svg";
 process.env.LEETCODE_OUTPUT_PATH = "dist/preview-leetcode-card.svg";
 process.env.LEETCODE_USERNAME   = "HrSaif";
 
@@ -60,6 +62,40 @@ globalThis.fetch = async (url, opts) => {
                 { difficulty: "Easy", count: 190, submissions: 220 },
                 { difficulty: "Medium", count: 260, submissions: 320 },
                 { difficulty: "Hard", count: 90, submissions: 160 },
+              ],
+            },
+          },
+        },
+      }),
+    };
+  }
+  // GitHub GraphQL: distinguish the profile-stats query from the contributions query
+  const body = typeof opts?.body === "string" ? opts.body : "";
+  if (body.includes("repositories(")) {
+    return {
+      ok: true,
+      json: async () => ({
+        data: {
+          user: {
+            contributionsCollection: {
+              totalCommitContributions: 482,
+              totalPullRequestContributions: 61,
+              totalIssueContributions: 19,
+            },
+            repositories: {
+              pageInfo: { hasNextPage: false, endCursor: null },
+              nodes: [
+                { stargazerCount: 14, languages: { edges: [
+                  { size: 82000, node: { name: "Java", color: "#b07219" } },
+                  { size: 21000, node: { name: "Dockerfile", color: "#384d54" } },
+                ] } },
+                { stargazerCount: 3, languages: { edges: [
+                  { size: 40000, node: { name: "TypeScript", color: "#3178c6" } },
+                  { size: 12000, node: { name: "CSS", color: "#563d7c" } },
+                ] } },
+                { stargazerCount: 0, languages: { edges: [
+                  { size: 15000, node: { name: "JavaScript", color: "#f1e05a" } },
+                ] } },
               ],
             },
           },

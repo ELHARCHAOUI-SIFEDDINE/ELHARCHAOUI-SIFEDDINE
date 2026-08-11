@@ -3,6 +3,8 @@
  * Generates animated terminal-themed SVGs for the profile README:
  *   - dist/github-jet.svg           "jet over contribution grid"
  *   - dist/github-contrib-card.svg  contribution/streak stat panel
+ *   - dist/github-profile-card.svg  stars/commits/PRs + top-language breakdown
+ *   - dist/contribution-wave.svg    animated weekly contribution wave chart
  *   - dist/leetcode-card.svg        LeetCode solved/acceptance panel
  * All using ELHARCHAOUI-SIFEDDINE's REAL GitHub contribution calendar
  * and HrSaif's public LeetCode stats. Run via GitHub Actions
@@ -16,6 +18,8 @@ const USERNAME         = process.env.GH_USERNAME         || "ELHARCHAOUI-SIFEDDI
 const TOKEN            = process.env.GH_TOKEN            || process.env.GITHUB_TOKEN;
 const OUTPUT           = process.env.OUTPUT_PATH         || "dist/github-jet.svg";
 const CONTRIB_OUTPUT   = process.env.CONTRIB_OUTPUT_PATH || "dist/github-contrib-card.svg";
+const PROFILE_OUTPUT   = process.env.PROFILE_OUTPUT_PATH || "dist/github-profile-card.svg";
+const WAVE_OUTPUT      = process.env.WAVE_OUTPUT_PATH    || "dist/contribution-wave.svg";
 const LEETCODE_OUTPUT  = process.env.LEETCODE_OUTPUT_PATH || "dist/leetcode-card.svg";
 const LEETCODE_USERNAME = process.env.LEETCODE_USERNAME  || "HrSaif";
 const COLS       = 34;
@@ -67,6 +71,76 @@ async function fetchContributions() {
   return { weeks: calendar.weeks, totalContributions: calendar.totalContributions };
 }
 
+/* ------------------------------------------------------------------ */
+/* Profile stats: stars, commits/PRs, top languages                    */
+/* ------------------------------------------------------------------ */
+
+const PROFILE_QUERY = `
+  query($login: String!, $after: String) {
+    user(login: $login) {
+      contributionsCollection {
+        totalCommitContributions
+        totalPullRequestContributions
+        totalIssueContributions
+      }
+      repositories(first: 50, after: $after, ownerAffiliation: OWNER, isFork: false, privacy: PUBLIC) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          stargazerCount
+          languages(first: 8, orderBy: { field: SIZE, direction: DESC }) {
+            edges { size node { name color } }
+          }
+        }
+      }
+    }
+  }
+`;
+
+async function fetchProfileStats() {
+  let after = null, stars = 0, commits = 0, prs = 0, issues = 0, page = 0;
+  const langBytes = new Map(); // name -> { size, color }
+
+  for (;;) {
+    const res = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: { Authorization: `bearer ${TOKEN}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ query: PROFILE_QUERY, variables: { login: USERNAME, after } }),
+    });
+    if (!res.ok) throw new Error(`GitHub API error ${res.status}: ${await res.text()}`);
+    const json = await res.json();
+    if (json.errors) throw new Error(JSON.stringify(json.errors));
+    const user = json.data.user;
+
+    if (page === 0) {
+      commits = user.contributionsCollection.totalCommitContributions;
+      prs     = user.contributionsCollection.totalPullRequestContributions;
+      issues  = user.contributionsCollection.totalIssueContributions;
+    }
+    for (const repo of user.repositories.nodes) {
+      stars += repo.stargazerCount;
+      for (const edge of repo.languages.edges) {
+        const prev = langBytes.get(edge.node.name) || { size: 0, color: edge.node.color || "#8b949e" };
+        prev.size += edge.size;
+        langBytes.set(edge.node.name, prev);
+      }
+    }
+
+    const pageInfo = user.repositories.pageInfo;
+    page++;
+    if (!pageInfo.hasNextPage || page >= 4) break; // cap at ~200 repos
+    after = pageInfo.endCursor;
+  }
+
+  const totalBytes = [...langBytes.values()].reduce((s, l) => s + l.size, 0);
+  const languages = [...langBytes.entries()]
+    .sort((a, b) => b[1].size - a[1].size)
+    .slice(0, 5)
+    .map(([name, l]) => ({ name, color: l.color, pct: totalBytes > 0 ? (l.size / totalBytes) * 100 : 0 }));
+  const otherPct = Math.max(0, 100 - languages.reduce((s, l) => s + l.pct, 0));
+
+  return { stars, commits, prs, issues, languages, otherPct };
+}
+
 function buildCells(weeks) {
   const recent   = weeks.slice(-COLS);
   const padCount = COLS - recent.length;
@@ -95,6 +169,25 @@ function keyTimeForCol(col, direction) {
   return direction === "forward" ? t : 1 - t;
 }
 const fmt = n => Number(n.toFixed(4));
+
+// Catmull-Rom -> cubic Bezier smoothing (tension 1/6) for a smooth wave curve
+// through an arbitrary set of {x,y} points.
+function smoothPath(points) {
+  if (points.length < 2) return "";
+  let d = `M ${fmt(points[0].x)},${fmt(points[0].y)}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i === 0 ? i : i - 1];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[i + 2 < points.length ? i + 2 : i + 1];
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C ${fmt(cp1x)},${fmt(cp1y)} ${fmt(cp2x)},${fmt(cp2y)} ${fmt(p2.x)},${fmt(p2.y)}`;
+  }
+  return d;
+}
 
 function buildGrid(cells, targets) {
   const tk = new Set(targets.map(t => `${t.col}-${t.row}`));
@@ -396,6 +489,150 @@ ${borderFrame({ w: CC_W, h: CC_H, id: "CC", rx: 12 })}
 }
 
 /* ------------------------------------------------------------------ */
+/* Profile card: stars / commits / PRs / top languages                 */
+/* ------------------------------------------------------------------ */
+
+const PC_W = 494, PC_H = 195;
+
+function buildProfileCard(stats) {
+  const { stars, commits, prs, languages, otherPct } = stats;
+
+  const barX = 18, barW = 458, barY = 142, barH = 10;
+  let segX = barX;
+  let segs = "";
+  for (const l of languages) {
+    const segW = fmt((l.pct / 100) * barW);
+    segs += `<rect x="${fmt(segX)}" y="${barY}" width="${segW}" height="${barH}" fill="${l.color}"/>`;
+    segX += segW;
+  }
+  if (otherPct > 0.5) {
+    const segW = fmt((otherPct / 100) * barW);
+    segs += `<rect x="${fmt(segX)}" y="${barY}" width="${segW}" height="${barH}" fill="#334155"/>`;
+  }
+
+  const legend = languages.map((l, i) => {
+    const col = i % 3, row = Math.floor(i / 3);
+    const cx = 18 + col * 150, ty = 165 + row * 14;
+    return `<circle cx="${cx}" cy="${ty - 3}" r="3" fill="${l.color}"/>` +
+      `<text x="${cx + 8}" y="${ty}" class="lang">${esc(l.name)} ${l.pct.toFixed(0)}%</text>`;
+  }).join("\n");
+
+  return `<svg viewBox="0 0 ${PC_W} ${PC_H}" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  ${sharedDefs("PC")}
+  <style>
+    .term    { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #64748B; letter-spacing: 0.5px; }
+    .scan    { font-family: 'Courier New', Consolas, monospace; font-size: 7.5px; fill: #00ff88; letter-spacing: 1px; }
+    .title   { font-family: 'Courier New', Consolas, monospace; font-size: 10px; fill: #00ff88; letter-spacing: 2px; opacity: 0.75; }
+    .label   { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #64748B; letter-spacing: 0.8px; }
+    .key     { font-family: 'Courier New', Consolas, monospace; font-size: 18px; fill: #00ff88; font-weight: bold; }
+    .big     { font-family: 'Courier New', Consolas, monospace; font-size: 28px; fill: #00ff88; font-weight: bold; }
+    .lang    { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #E5E7EB; }
+  </style>
+</defs>
+<rect width="${PC_W}" height="${PC_H}" rx="14" fill="url(#bgGlowPC)"/>
+<rect width="${PC_W}" height="${PC_H}" rx="14" fill="url(#scanlinesPC)"/>
+${titlebar({ w: PC_W, id: "PC", label: "sif@devos ~ % ./profile.sh --stats" })}
+<text x="18" y="43" class="title">GITHUB.PROFILE</text>
+
+<text x="18" y="76" class="big" filter="url(#glowPC)">&#9733; ${fmtNum(stars)}</text>
+<text x="18" y="90" class="label">STARS EARNED</text>
+
+<text x="262" y="60" class="label">COMMITS (1Y)</text>
+<text x="262" y="79" class="key">${fmtNum(commits)}</text>
+<text x="262" y="100" class="label">PULL REQUESTS (1Y)</text>
+<text x="262" y="119" class="key">${fmtNum(prs)}</text>
+
+<line x1="18" y1="124" x2="476" y2="124" stroke="#1f2937" stroke-width="1"/>
+<text x="18" y="136" class="label">TOP LANGUAGES</text>
+<rect x="${barX}" y="${barY}" width="${barW}" height="${barH}" rx="5" fill="#0B1120"/>
+${segs}
+${legend}
+
+${scanSweep({ w: PC_W, h: PC_H, id: "PC" })}
+${borderFrame({ w: PC_W, h: PC_H, id: "PC", rx: 12 })}
+</svg>`;
+}
+
+/* ------------------------------------------------------------------ */
+/* Contribution wave: animated weekly-total wave chart                 */
+/* ------------------------------------------------------------------ */
+
+const WV_W = 1180, WV_H = 260;
+
+function buildContributionWave(weeks) {
+  const totals = weeks.map(w => w.contributionDays.reduce((s, d) => s + (d.contributionCount || 0), 0));
+  const n = totals.length;
+  const max = Math.max(1, ...totals);
+  const padL = 40, padR = 40, padT = 70, padB = 46;
+  const plotW = WV_W - padL - padR;
+  const baseline = WV_H - padB;
+
+  const points = totals.map((c, i) => ({
+    x: padL + (n > 1 ? i * (plotW / (n - 1)) : 0),
+    y: baseline - (c / max) * (baseline - padT),
+    c,
+  }));
+
+  const linePath = smoothPath(points);
+  const last = points[n - 1];
+  const areaPath = `${linePath} L ${fmt(last.x)},${baseline} L ${fmt(points[0].x)},${baseline} Z`;
+
+  const ticks = [];
+  for (let i = 0; i < n; i += 8) {
+    const day = weeks[i].contributionDays.find(d => d.date);
+    if (day) ticks.push({ x: points[i].x, label: new Date(day.date).toLocaleString("en-US", { month: "short", timeZone: "UTC" }) });
+  }
+
+  return `<svg viewBox="0 0 ${WV_W} ${WV_H}" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  ${sharedDefs("WV")}
+  <linearGradient id="areaFillWV" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#00ff88" stop-opacity="0.35"/>
+    <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+  </linearGradient>
+  <clipPath id="waveRevealWV">
+    <rect x="0" y="0" width="0" height="${WV_H}">
+      <animate attributeName="width" from="0" to="${WV_W}" dur="2.4s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+  </clipPath>
+  <style>
+    .term  { font-family: 'Courier New', Consolas, monospace; font-size: 11px; fill: #64748B; letter-spacing: 0.5px; }
+    .scan  { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #00ff88; letter-spacing: 1px; }
+    .title { font-family: 'Courier New', Consolas, monospace; font-size: 12px; fill: #00ff88; letter-spacing: 2px; opacity: 0.75; }
+    .tick  { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #475569; }
+    .cur   { font-family: 'Courier New', Consolas, monospace; font-size: 11px; fill: #ff4466; font-weight: bold; }
+  </style>
+</defs>
+<rect width="${WV_W}" height="${WV_H}" rx="16" fill="url(#bgGlowWV)"/>
+<rect width="${WV_W}" height="${WV_H}" rx="16" fill="url(#scanlinesWV)"/>
+${titlebar({ w: WV_W, id: "WV", label: "sif@devos ~ % ./contribution-wave.sh --live", dotR: 4.5, barH: 30 })}
+<text x="30" y="60" class="title">CONTRIBUTION.WAVE &#183; 52 WEEKS</text>
+
+<g stroke="#1f2937" stroke-width="1">
+  <line x1="${padL}" y1="${padT}" x2="${WV_W - padR}" y2="${padT}" opacity="0.4"/>
+  <line x1="${padL}" y1="${fmt((padT + baseline) / 2)}" x2="${WV_W - padR}" y2="${fmt((padT + baseline) / 2)}" opacity="0.4"/>
+  <line x1="${padL}" y1="${baseline}" x2="${WV_W - padR}" y2="${baseline}" opacity="0.6"/>
+</g>
+
+<g clip-path="url(#waveRevealWV)">
+  <path d="${areaPath}" fill="url(#areaFillWV)"/>
+  <path d="${linePath}" fill="none" stroke="url(#borderGradWV)" stroke-width="2.5" filter="url(#glowWV)"/>
+</g>
+
+<circle cx="${fmt(last.x)}" cy="${fmt(last.y)}" r="4" fill="#00ff88" filter="url(#glowWV)">
+  <animate attributeName="opacity" values="1;0.3;1" dur="1.6s" repeatCount="indefinite"/>
+</circle>
+<text x="${fmt(last.x)}" y="${fmt(last.y - 12)}" text-anchor="end" class="cur">${last.c} this wk</text>
+
+${ticks.map(t => `<text x="${fmt(t.x)}" y="${baseline + 18}" text-anchor="middle" class="tick">${t.label}</text>`).join("\n")}
+
+${scanSweep({ w: WV_W, h: WV_H, id: "WV" })}
+${borderFrame({ w: WV_W, h: WV_H, id: "WV", rx: 16 })}
+</svg>`;
+}
+
+/* ------------------------------------------------------------------ */
 /* LeetCode card                                                       */
 /* ------------------------------------------------------------------ */
 
@@ -486,6 +723,16 @@ async function main() {
 
   const streaks = computeStreaks(weeks, totalContributions);
   writeOut(CONTRIB_OUTPUT, buildContribCard(streaks));
+
+  writeOut(WAVE_OUTPUT, buildContributionWave(weeks));
+
+  console.log(`Fetching profile stats (stars/commits/languages) for ${USERNAME}...`);
+  try {
+    const profileStats = await fetchProfileStats();
+    writeOut(PROFILE_OUTPUT, buildProfileCard(profileStats));
+  } catch (err) {
+    console.error(`Profile stats fetch failed, leaving ${PROFILE_OUTPUT} untouched: ${err.message}`);
+  }
 
   console.log(`Fetching LeetCode stats for ${LEETCODE_USERNAME}...`);
   try {

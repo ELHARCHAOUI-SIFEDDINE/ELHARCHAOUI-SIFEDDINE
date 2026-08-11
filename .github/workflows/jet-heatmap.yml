@@ -28,6 +28,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT_PATH: dist/github-jet.svg
           CONTRIB_OUTPUT_PATH: dist/github-contrib-card.svg
+          PROFILE_OUTPUT_PATH: dist/github-profile-card.svg
+          WAVE_OUTPUT_PATH: dist/contribution-wave.svg
           LEETCODE_OUTPUT_PATH: dist/leetcode-card.svg
           LEETCODE_USERNAME: HrSaif
         run: node generate.mjs
@@ -36,6 +38,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dist/github-jet.svg dist/github-contrib-card.svg dist/leetcode-card.svg
-          git diff --cached --quiet || git commit -m "chore: update contribution & leetcode cards [skip ci]"
+          git add dist/github-jet.svg dist/github-contrib-card.svg dist/github-profile-card.svg dist/contribution-wave.svg dist/leetcode-card.svg
+          git diff --cached --quiet || git commit -m "chore: update contribution, profile & leetcode cards [skip ci]"
           git push
