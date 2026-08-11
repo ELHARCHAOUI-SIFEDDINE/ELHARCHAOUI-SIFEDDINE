@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const USERNAME   = process.env.GH_USERNAME  || "sifeddine-elharchaoui";
+const USERNAME   = process.env.GH_USERNAME  || "ELHARCHAOUI-SIFEDDINE";
 const TOKEN      = process.env.GH_TOKEN     || process.env.GITHUB_TOKEN;
 const OUTPUT     = process.env.OUTPUT_PATH  || "dist/github-jet.svg";
 const COLS       = 34;
