@@ -1,0 +1,94 @@
+<svg viewBox="0 0 1180 230" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <radialGradient id="bgGlowLC" cx="30%" cy="20%" r="80%">
+    <stop offset="0%" stop-color="#0B1120"/>
+    <stop offset="100%" stop-color="#050816"/>
+  </radialGradient>
+  <linearGradient id="borderGradLC" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00ff88"/>
+    <stop offset="50%" stop-color="#00cc6a"/>
+    <stop offset="100%" stop-color="#009944"/>
+  </linearGradient>
+  <linearGradient id="scanGradLC" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#00ff88" stop-opacity="0"/>
+    <stop offset="45%" stop-color="#00ff88" stop-opacity="0.05"/>
+    <stop offset="50%" stop-color="#00ffaa" stop-opacity="0.65"/>
+    <stop offset="55%" stop-color="#00ff88" stop-opacity="0.05"/>
+    <stop offset="100%" stop-color="#00cc6a" stop-opacity="0"/>
+  </linearGradient>
+  <pattern id="scanlinesLC" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect width="4" height="1" fill="#00ff88" opacity="0.03"/>
+  </pattern>
+  <filter id="glowLC" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="2.1" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .term    { font-family: 'Courier New', Consolas, monospace; font-size: 11px; fill: #64748B; letter-spacing: 0.5px; }
+    .scan    { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #00ff88; letter-spacing: 1px; }
+    .title   { font-family: 'Courier New', Consolas, monospace; font-size: 12px; fill: #00ff88; letter-spacing: 2px; opacity: 0.75; }
+    .label   { font-family: 'Courier New', Consolas, monospace; font-size: 10px; fill: #64748B; letter-spacing: 0.8px; }
+    .key     { font-family: 'Courier New', Consolas, monospace; font-size: 13px; fill: #00ff88; font-weight: bold; }
+    .value   { font-family: 'Courier New', Consolas, monospace; font-size: 13px; fill: #E5E7EB; }
+    .big     { font-family: 'Courier New', Consolas, monospace; font-size: 34px; fill: #00ff88; font-weight: bold; }
+    .accent  { font-family: 'Courier New', Consolas, monospace; font-size: 13px; fill: #00cc6a; font-weight: bold; }
+  </style>
+</defs>
+<rect width="1180" height="230" rx="16" fill="url(#bgGlowLC)"/>
+<rect width="1180" height="230" rx="16" fill="url(#scanlinesLC)"/>
+<g id="titlebarLC">
+  <rect x="3" y="3" width="1174" height="30" rx="15" fill="#0B1120" fill-opacity="0.85"/>
+  <circle cx="30" cy="18" r="4.5" fill="#EF4444"><animate attributeName="opacity" values="1;0.55;1" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="42" cy="18" r="4.5" fill="#F59E0B"><animate attributeName="opacity" values="1;0.55;1" dur="4s" begin="0.3s" repeatCount="indefinite"/></circle>
+  <circle cx="54" cy="18" r="4.5" fill="#00ff88"><animate attributeName="opacity" values="1;0.55;1" dur="4s" begin="0.6s" repeatCount="indefinite"/></circle>
+  <text x="590" y="21.5" text-anchor="middle" class="term">sif@devos ~ % ./leetcode.sh --user HrSaif</text>
+  <circle cx="1122" cy="18" r="4.1" fill="#00ff88"><animate attributeName="opacity" values="1;0.15;1" dur="1.1s" repeatCount="indefinite"/></circle>
+  <text x="1130" y="21" class="scan">LIVE</text>
+</g>
+
+<text x="30" y="60" class="title">LEETCODE.STATS</text>
+
+<g transform="translate(0,10)">
+  <circle cx="170" cy="128" r="50" fill="none" stroke="#1f2937" stroke-width="10"/>
+  <circle cx="170" cy="128" r="50" fill="none" stroke="url(#borderGradLC)" stroke-width="10" stroke-linecap="round"
+    stroke-dasharray="314.1593" stroke-dashoffset="314.1593" transform="rotate(-90 170 128)" filter="url(#glowLC)">
+    <animate attributeName="stroke-dashoffset" from="314.1593" to="311.6573" dur="1.4s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+  </circle>
+  <text x="170" y="124" text-anchor="middle" class="big">32</text>
+  <text x="170" y="144" text-anchor="middle" class="label">SOLVED</text>
+  <text x="170" y="196" text-anchor="middle" class="key">79.6% ACCEPTANCE</text>
+  <text x="170" y="212" text-anchor="middle" class="label">of 4,018 problems</text>
+</g>
+
+<line x1="300" y1="45" x2="300" y2="205" stroke="#1f2937" stroke-width="1"/>
+<text x="300" y="65" class="title">DIFFICULTY BREAKDOWN</text>
+
+<text x="300" y="105" class="key" fill="#00ff88">EASY</text>
+<rect x="430" y="93" width="500" height="14" rx="7" fill="#0B1120" stroke="#1f2937"/>
+<rect x="430" y="93" width="0" height="14" rx="7" fill="#00ff88">
+  <animate attributeName="width" from="0" to="10.4384" dur="1.1s" begin="0.4s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+</rect>
+<text x="950" y="105" class="value">20 / 958</text>
+<text x="1155" y="105" text-anchor="end" class="key" fill="#00ff88">2.1%</text>
+<text x="300" y="145" class="key" fill="#F59E0B">MEDIUM</text>
+<rect x="430" y="133" width="500" height="14" rx="7" fill="#0B1120" stroke="#1f2937"/>
+<rect x="430" y="133" width="0" height="14" rx="7" fill="#F59E0B">
+  <animate attributeName="width" from="0" to="2.3832" dur="1.1s" begin="0.5s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+</rect>
+<text x="950" y="145" class="value">10 / 2,098</text>
+<text x="1155" y="145" text-anchor="end" class="key" fill="#F59E0B">0.5%</text>
+<text x="300" y="185" class="key" fill="#EF4444">HARD</text>
+<rect x="430" y="173" width="500" height="14" rx="7" fill="#0B1120" stroke="#1f2937"/>
+<rect x="430" y="173" width="0" height="14" rx="7" fill="#EF4444">
+  <animate attributeName="width" from="0" to="1.0395" dur="1.1s" begin="0.6s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+</rect>
+<text x="950" y="185" class="value">2 / 962</text>
+<text x="1155" y="185" text-anchor="end" class="key" fill="#EF4444">0.2%</text>
+
+<rect x="0" y="-40" width="1180" height="40" fill="url(#scanGradLC)" opacity="0.6" style="mix-blend-mode:screen">
+  <animateTransform attributeName="transform" type="translate" from="0 -40" to="0 270" dur="4.2s" repeatCount="indefinite"/>
+</rect>
+<rect x="3" y="3" width="1174" height="224" rx="16" fill="none" stroke="url(#borderGradLC)" stroke-width="2" opacity="0.8">
+  <animate attributeName="opacity" values="0.5;0.95;0.5" dur="3.2s" repeatCount="indefinite"/>
+</rect>
+</svg>

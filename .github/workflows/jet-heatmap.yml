@@ -1,0 +1,41 @@
+name: Update Jet Heatmap
+
+on:
+  schedule:
+    - cron: "0 1 * * *"   # runs every day at 01:00 UTC
+  workflow_dispatch:        # lets you trigger it manually from GitHub UI
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # needed to push the generated SVG back
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate terminal-themed SVG cards
+        env:
+          GH_USERNAME: sifeddine-elharchaoui
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OUTPUT_PATH: dist/github-jet.svg
+          CONTRIB_OUTPUT_PATH: dist/github-contrib-card.svg
+          LEETCODE_OUTPUT_PATH: dist/leetcode-card.svg
+          LEETCODE_USERNAME: HrSaif
+        run: node generate.mjs
+
+      - name: Commit and push updated SVGs
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist/github-jet.svg dist/github-contrib-card.svg dist/leetcode-card.svg
+          git diff --cached --quiet || git commit -m "chore: update contribution & leetcode cards [skip ci]"
+          git push
