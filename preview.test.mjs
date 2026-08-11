@@ -1,7 +1,7 @@
 // Run locally to test: node preview.test.mjs
 // Generates dist/preview*.svg without needing a GitHub token or network access.
 
-process.env.GH_USERNAME         = "ELHARCHAOUI-SIFEDDINE";
+process.env.GH_USERNAME = "ELHARCHAOUI-SIFEDDINE";
 process.env.GH_TOKEN            = "fake-token-for-preview";
 process.env.OUTPUT_PATH         = "dist/preview.svg";
 process.env.CONTRIB_OUTPUT_PATH = "dist/preview-contrib-card.svg";
