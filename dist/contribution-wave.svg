@@ -1,0 +1,86 @@
+<svg viewBox="0 0 1180 260" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <radialGradient id="bgGlowWV" cx="30%" cy="20%" r="80%">
+    <stop offset="0%" stop-color="#0B1120"/>
+    <stop offset="100%" stop-color="#050816"/>
+  </radialGradient>
+  <linearGradient id="borderGradWV" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00ff88"/>
+    <stop offset="50%" stop-color="#00cc6a"/>
+    <stop offset="100%" stop-color="#009944"/>
+  </linearGradient>
+  <linearGradient id="scanGradWV" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#00ff88" stop-opacity="0"/>
+    <stop offset="45%" stop-color="#00ff88" stop-opacity="0.05"/>
+    <stop offset="50%" stop-color="#00ffaa" stop-opacity="0.65"/>
+    <stop offset="55%" stop-color="#00ff88" stop-opacity="0.05"/>
+    <stop offset="100%" stop-color="#00cc6a" stop-opacity="0"/>
+  </linearGradient>
+  <pattern id="scanlinesWV" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect width="4" height="1" fill="#00ff88" opacity="0.03"/>
+  </pattern>
+  <filter id="glowWV" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="2.1" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <linearGradient id="areaFillWV" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#00ff88" stop-opacity="0.35"/>
+    <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+  </linearGradient>
+  <clipPath id="waveRevealWV">
+    <rect x="0" y="0" width="0" height="260">
+      <animate attributeName="width" from="0" to="1180" dur="2.4s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+  </clipPath>
+  <style>
+    .term  { font-family: 'Courier New', Consolas, monospace; font-size: 11px; fill: #64748B; letter-spacing: 0.5px; }
+    .scan  { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #00ff88; letter-spacing: 1px; }
+    .title { font-family: 'Courier New', Consolas, monospace; font-size: 12px; fill: #00ff88; letter-spacing: 2px; opacity: 0.75; }
+    .tick  { font-family: 'Courier New', Consolas, monospace; font-size: 9px; fill: #475569; }
+    .cur   { font-family: 'Courier New', Consolas, monospace; font-size: 11px; fill: #ff4466; font-weight: bold; }
+  </style>
+</defs>
+<rect width="1180" height="260" rx="16" fill="url(#bgGlowWV)"/>
+<rect width="1180" height="260" rx="16" fill="url(#scanlinesWV)"/>
+<g id="titlebarWV">
+  <rect x="3" y="3" width="1174" height="30" rx="15" fill="#0B1120" fill-opacity="0.85"/>
+  <circle cx="30" cy="18" r="4.5" fill="#EF4444"><animate attributeName="opacity" values="1;0.55;1" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="42" cy="18" r="4.5" fill="#F59E0B"><animate attributeName="opacity" values="1;0.55;1" dur="4s" begin="0.3s" repeatCount="indefinite"/></circle>
+  <circle cx="54" cy="18" r="4.5" fill="#00ff88"><animate attributeName="opacity" values="1;0.55;1" dur="4s" begin="0.6s" repeatCount="indefinite"/></circle>
+  <text x="590" y="21.5" text-anchor="middle" class="term">sif@devos ~ % ./contribution-wave.sh --live</text>
+  <circle cx="1122" cy="18" r="4.1" fill="#00ff88"><animate attributeName="opacity" values="1;0.15;1" dur="1.1s" repeatCount="indefinite"/></circle>
+  <text x="1130" y="21" class="scan">LIVE</text>
+</g>
+<text x="30" y="60" class="title">CONTRIBUTION.WAVE &#183; 52 WEEKS</text>
+
+<g stroke="#1f2937" stroke-width="1">
+  <line x1="40" y1="70" x2="1140" y2="70" opacity="0.4"/>
+  <line x1="40" y1="142" x2="1140" y2="142" opacity="0.4"/>
+  <line x1="40" y1="214" x2="1140" y2="214" opacity="0.6"/>
+</g>
+
+<g clip-path="url(#waveRevealWV)">
+  <path d="M 40,214 C 43.5256,214 54.1026,214 61.1538,214 C 68.2051,214 75.2564,214 82.3077,214 C 89.359,214 96.4103,214 103.4615,214 C 110.5128,214 117.5641,214 124.6154,214 C 131.6667,214 138.7179,214 145.7692,214 C 152.8205,214 159.8718,214 166.9231,214 C 173.9744,214 181.0256,214 188.0769,214 C 195.1282,214 202.1795,214 209.2308,214 C 216.2821,214 223.3333,214 230.3846,214 C 237.4359,214 244.4872,214 251.5385,214 C 258.5897,214 265.641,214 272.6923,214 C 279.7436,214 286.7949,214 293.8462,214 C 300.8974,214 307.9487,214 315,214 C 322.0513,214 329.1026,214 336.1538,214 C 343.2051,214 350.2564,214 357.3077,214 C 364.359,214 371.4103,214 378.4615,214 C 385.5128,214 392.5641,214 399.6154,214 C 406.6667,214 413.7179,214 420.7692,214 C 427.8205,214 434.8718,214 441.9231,214 C 448.9744,214 456.0256,214 463.0769,214 C 470.1282,214 477.1795,214 484.2308,214 C 491.2821,214 498.3333,214 505.3846,214 C 512.4359,214 519.4872,214 526.5385,214 C 533.5897,214 540.641,214 547.6923,214 C 554.7436,214 561.7949,214 568.8462,214 C 575.8974,214 582.9487,214 590,214 C 597.0513,214 604.1026,214 611.1538,214 C 618.2051,214 625.2564,214 632.3077,214 C 639.359,214 646.4103,214 653.4615,214 C 660.5128,214 667.5641,214 674.6154,214 C 681.6667,214 688.7179,214 695.7692,214 C 702.8205,214 709.8718,214 716.9231,214 C 723.9744,214 731.0256,214 738.0769,214 C 745.1282,214 752.1795,214 759.2308,214 C 766.2821,214 773.3333,214 780.3846,214 C 787.4359,214 794.4872,214 801.5385,214 C 808.5897,214 815.641,214 822.6923,214 C 829.7436,214 836.7949,214 843.8462,214 C 850.8974,214 857.9487,214 865,214 C 872.0513,214 879.1026,214 886.1538,214 C 893.2051,214 900.2564,214 907.3077,214 C 914.359,214 921.4103,214 928.4615,214 C 935.5128,214 942.5641,214 949.6154,214 C 956.6667,214 963.7179,214 970.7692,214 C 977.8205,214 984.8718,214 991.9231,214 C 998.9744,214 1006.0256,214 1013.0769,214 C 1020.1282,214 1027.1795,214 1034.2308,214 C 1041.2821,214 1048.3333,214 1055.3846,214 C 1062.4359,214 1069.4872,214 1076.5385,214 C 1083.5897,214 1090.641,214 1097.6923,214 C 1104.7436,214 1111.7949,238 1118.8462,214 C 1125.8974,190 1136.4744,94 1140,70 L 1140,214 L 40,214 Z" fill="url(#areaFillWV)"/>
+  <path d="M 40,214 C 43.5256,214 54.1026,214 61.1538,214 C 68.2051,214 75.2564,214 82.3077,214 C 89.359,214 96.4103,214 103.4615,214 C 110.5128,214 117.5641,214 124.6154,214 C 131.6667,214 138.7179,214 145.7692,214 C 152.8205,214 159.8718,214 166.9231,214 C 173.9744,214 181.0256,214 188.0769,214 C 195.1282,214 202.1795,214 209.2308,214 C 216.2821,214 223.3333,214 230.3846,214 C 237.4359,214 244.4872,214 251.5385,214 C 258.5897,214 265.641,214 272.6923,214 C 279.7436,214 286.7949,214 293.8462,214 C 300.8974,214 307.9487,214 315,214 C 322.0513,214 329.1026,214 336.1538,214 C 343.2051,214 350.2564,214 357.3077,214 C 364.359,214 371.4103,214 378.4615,214 C 385.5128,214 392.5641,214 399.6154,214 C 406.6667,214 413.7179,214 420.7692,214 C 427.8205,214 434.8718,214 441.9231,214 C 448.9744,214 456.0256,214 463.0769,214 C 470.1282,214 477.1795,214 484.2308,214 C 491.2821,214 498.3333,214 505.3846,214 C 512.4359,214 519.4872,214 526.5385,214 C 533.5897,214 540.641,214 547.6923,214 C 554.7436,214 561.7949,214 568.8462,214 C 575.8974,214 582.9487,214 590,214 C 597.0513,214 604.1026,214 611.1538,214 C 618.2051,214 625.2564,214 632.3077,214 C 639.359,214 646.4103,214 653.4615,214 C 660.5128,214 667.5641,214 674.6154,214 C 681.6667,214 688.7179,214 695.7692,214 C 702.8205,214 709.8718,214 716.9231,214 C 723.9744,214 731.0256,214 738.0769,214 C 745.1282,214 752.1795,214 759.2308,214 C 766.2821,214 773.3333,214 780.3846,214 C 787.4359,214 794.4872,214 801.5385,214 C 808.5897,214 815.641,214 822.6923,214 C 829.7436,214 836.7949,214 843.8462,214 C 850.8974,214 857.9487,214 865,214 C 872.0513,214 879.1026,214 886.1538,214 C 893.2051,214 900.2564,214 907.3077,214 C 914.359,214 921.4103,214 928.4615,214 C 935.5128,214 942.5641,214 949.6154,214 C 956.6667,214 963.7179,214 970.7692,214 C 977.8205,214 984.8718,214 991.9231,214 C 998.9744,214 1006.0256,214 1013.0769,214 C 1020.1282,214 1027.1795,214 1034.2308,214 C 1041.2821,214 1048.3333,214 1055.3846,214 C 1062.4359,214 1069.4872,214 1076.5385,214 C 1083.5897,214 1090.641,214 1097.6923,214 C 1104.7436,214 1111.7949,238 1118.8462,214 C 1125.8974,190 1136.4744,94 1140,70" fill="none" stroke="url(#borderGradWV)" stroke-width="2.5" filter="url(#glowWV)"/>
+</g>
+
+<circle cx="1140" cy="70" r="4" fill="#00ff88" filter="url(#glowWV)">
+  <animate attributeName="opacity" values="1;0.3;1" dur="1.6s" repeatCount="indefinite"/>
+</circle>
+<text x="1140" y="58" text-anchor="end" class="cur">7 this wk</text>
+
+<text x="40" y="232" text-anchor="middle" class="tick">Aug</text>
+<text x="209.2308" y="232" text-anchor="middle" class="tick">Oct</text>
+<text x="378.4615" y="232" text-anchor="middle" class="tick">Nov</text>
+<text x="547.6923" y="232" text-anchor="middle" class="tick">Jan</text>
+<text x="716.9231" y="232" text-anchor="middle" class="tick">Mar</text>
+<text x="886.1538" y="232" text-anchor="middle" class="tick">May</text>
+<text x="1055.3846" y="232" text-anchor="middle" class="tick">Jul</text>
+
+<rect x="0" y="-40" width="1180" height="40" fill="url(#scanGradWV)" opacity="0.6" style="mix-blend-mode:screen">
+  <animateTransform attributeName="transform" type="translate" from="0 -40" to="0 300" dur="4.2s" repeatCount="indefinite"/>
+</rect>
+<rect x="3" y="3" width="1174" height="254" rx="16" fill="none" stroke="url(#borderGradWV)" stroke-width="2" opacity="0.8">
+  <animate attributeName="opacity" values="0.5;0.95;0.5" dur="3.2s" repeatCount="indefinite"/>
+</rect>
+</svg>
