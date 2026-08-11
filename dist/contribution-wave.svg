@@ -67,7 +67,7 @@
 <circle cx="1140" cy="70" r="4" fill="#00ff88" filter="url(#glowWV)">
   <animate attributeName="opacity" values="1;0.3;1" dur="1.6s" repeatCount="indefinite"/>
 </circle>
-<text x="1140" y="58" text-anchor="end" class="cur">7 this wk</text>
+<text x="1140" y="58" text-anchor="end" class="cur">9 this wk</text>
 
 <text x="40" y="232" text-anchor="middle" class="tick">Aug</text>
 <text x="209.2308" y="232" text-anchor="middle" class="tick">Oct</text>

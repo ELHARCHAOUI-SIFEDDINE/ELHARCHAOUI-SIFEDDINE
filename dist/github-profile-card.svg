@@ -57,7 +57,7 @@
 <line x1="18" y1="124" x2="476" y2="124" stroke="#1f2937" stroke-width="1"/>
 <text x="18" y="136" class="label">TOP LANGUAGES</text>
 <rect x="18" y="142" width="458" height="10" rx="5" fill="#0B1120"/>
-<rect x="18" y="142" width="118.6198" height="10" fill="#f1e05a"/><rect x="136.6198" y="142" width="83.886" height="10" fill="#663399"/><rect x="220.5058" y="142" width="78.4156" height="10" fill="#3178c6"/><rect x="298.9214" y="142" width="70.5511" height="10" fill="#f7523f"/><rect x="369.4725" y="142" width="50.0408" height="10" fill="#4F5D95"/><rect x="419.5133" y="142" width="56.4867" height="10" fill="#334155"/>
+<rect x="18" y="142" width="118.6199" height="10" fill="#f1e05a"/><rect x="136.6199" y="142" width="83.886" height="10" fill="#663399"/><rect x="220.5059" y="142" width="78.4156" height="10" fill="#3178c6"/><rect x="298.9215" y="142" width="70.5511" height="10" fill="#f7523f"/><rect x="369.4726" y="142" width="50.0408" height="10" fill="#4F5D95"/><rect x="419.5134" y="142" width="56.4867" height="10" fill="#334155"/>
 <circle cx="18" cy="162" r="3" fill="#f1e05a"/><text x="26" y="165" class="lang">JavaScript 26%</text>
 <circle cx="168" cy="162" r="3" fill="#663399"/><text x="176" y="165" class="lang">CSS 18%</text>
 <circle cx="318" cy="162" r="3" fill="#3178c6"/><text x="326" y="165" class="lang">TypeScript 17%</text>
